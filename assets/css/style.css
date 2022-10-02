@@ -1,0 +1,16 @@
+.highscore_time {
+  display: flex;
+  justify-content: space-between;
+}
+
+.highscore {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
