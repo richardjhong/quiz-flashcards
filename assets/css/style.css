@@ -14,3 +14,12 @@
   flex-direction: column;
   align-items: center;
 }
+
+#highscorelink {
+  color: purple;
+  text-decoration: underline;
+}
+
+#highscorelink:hover {
+  cursor: pointer;
+}
