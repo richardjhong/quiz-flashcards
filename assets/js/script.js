@@ -3,9 +3,9 @@ var currentScoreEl = document.querySelector('#currentActualScore')
 var currentHighScore = document.querySelector('#currentHighScore')
 var viewScores = document.querySelector('#highscorelink')
 var startButton = document.querySelector('#start-game')
-var remainingTime = 60;
-var askedQuestions = [];
-var score = 0;
+var remainingTime;
+var askedQuestions;
+var score;
 
 var questionSetCollective = {
   "first": {
@@ -55,6 +55,56 @@ var questionSetCollective = {
   },
 }
 
+firstLoad()
+
+function firstLoad() {
+  clearCardContent()
+  var content = document.getElementById("content-card")
+  var firstLoadHeader = document.createElement("h3")
+  var paragraphContainer = document.createElement("div")
+  var buttonContainer = document.createElement("div")
+  var paragraph = document.createElement("p")
+  var startButton = document.createElement("button")
+
+  firstLoadHeader.textContent = "Coding Quiz Challenge"
+  paragraph.textContent = "Try to answer the following code-related questions within the time limit (60s). Keep in mind that each incorrect answer will penalize your score and reduce remaining time by ten seconds!"
+  startButton.textContent = "Start Quiz"
+
+
+  content.appendChild(firstLoadHeader)
+  content.appendChild(paragraphContainer)
+  paragraphContainer.appendChild(paragraph)
+  content.appendChild(buttonContainer)
+  buttonContainer.appendChild(startButton)
+
+  startButton.addEventListener("click", startGame)
+}
+
+function startGame() {
+  clearCardContent()
+  askedQuestions = [0, 1, 2, 3, 4]
+  remainingTime = 60
+  score = 0
+  currentScoreEl.textContent = `${score}`
+  createQuizCards(getRandomInt(askedQuestions.length))
+  setTime()
+}
+
+function setTime () {
+  var timerInterval = setInterval(function () {
+    remainingTime--;
+    timeEl.textContent = remainingTime + " seconds remaining"
+
+    if (remainingTime <= 0 && askedQuestions.length !== 0) {
+      clearInterval(timerInterval)
+      endGame()
+      console.log("Time out")
+    } else if (askedQuestions.length === 0) {
+      clearInterval(timerInterval)
+    }
+  }, 1000)
+}
+
 function getRandomInt(max) {
   let index = Math.floor(Math.random() * max);
   switch (askedQuestions[index]) {
@@ -83,32 +133,6 @@ function getRandomInt(max) {
   }
 }
 
-function startGame() {
-  clearCardContent()
-  askedQuestions = [0, 1, 2, 3, 4]
-  createQuizCards(getRandomInt(askedQuestions.length))
-  setTime()
-}
-
-startButton.addEventListener("click", startGame)
-viewScores.addEventListener("click", showScoresPage)
-
-
-function setTime () {
-  var timerInterval = setInterval(function () {
-    remainingTime--;
-    timeEl.textContent = remainingTime + " seconds remaining"
-
-    if (remainingTime <= 0 && askedQuestions.length !== 0) {
-      clearInterval(timerInterval)
-      endGame()
-      console.log("Time out")
-    } else if (askedQuestions.length === 0) {
-      clearInterval(timerInterval)
-    }
-  }, 1000)
-}
-
 function clearCardContent () {
   var content = document.getElementById("content-card")
   while (content.firstChild) {  
@@ -127,6 +151,7 @@ function createQuizCards (questionSet) {
   currentQuestionSet.questions.forEach(question => {
     var questionToAppend = document.createElement('li')
     questionToAppend.textContent = question[1]
+    questionToAppend.setAttribute("style", "background-color: purple; color: white; border: 1px solid black; margin: 5px; font-size: 20px;")
 
     if (question[0] === "correct") {
       questionToAppend.addEventListener("click", correctSelection)
@@ -138,41 +163,6 @@ function createQuizCards (questionSet) {
   })
   
   questionHeader.textContent = currentQuestionSet.header
-}
-
-function correctSelection(event) {
-  event.preventDefault();
-  clearCardContent()
-  event.currentTarget.setAttribute(
-    "style",
-    "border: 1px solid black"
-  )
-  score++;
-  currentScoreEl.textContent = `${score}`;
-  
-  if (askedQuestions.length > 0) {
-    createQuizCards(getRandomInt(askedQuestions.length))
-  } else {
-    endGame()
-  }
-}
-
-function incorrectSelection(event) {
-  event.preventDefault();
-  clearCardContent()
-  event.currentTarget.setAttribute(
-    "style",
-    "border: 1px dotted red"
-  )
-  remainingTime -= 10;
-  score--;
-  currentScoreEl.textContent = `${score}`;
-  
-  if (askedQuestions.length > 0) {
-    createQuizCards(getRandomInt(askedQuestions.length))
-  } else {
-    endGame()
-  }
 }
 
 function endGame() {
@@ -191,18 +181,9 @@ function endGame() {
     id: "initials-input"
   }
 
-  var inputContainerAttributes = {
-    style: { margin: "5 auto"}
-  }
-
-  var submitButtonAttributes = {
-    id: "submit-initials",
-    style: { margin: "5 auto"}
-  }
-
   setAttributes(nameInitialsInput, nameInputAttributes)
-  setAttributes(inputContainer, inputContainerAttributes)
-  setAttributes(submitButton, submitButtonAttributes)
+  inputContainer.setAttribute("style", "margin: 5px")
+  submitButton.setAttribute("style", "margin: 5px")
   endScreenHeader.textContent = "All done!"
   endScoreText.textContent = `Your final score is ${score}.`
   submitButton.textContent = 'Submit'
@@ -218,12 +199,6 @@ function endGame() {
   submitButton.addEventListener("click", submitInitials)
 }
 
-function setAttributes(element, attributes) {
-  Object.keys(attributes).forEach(attr => {
-    element.setAttribute(attr, attributes[attr]);
-  });
-}
-
 function submitInitials() {
   var initials = document.querySelector("#initials-input")
   var allScores = JSON.parse(localStorage.getItem("scoreCollection")) || {}
@@ -236,31 +211,86 @@ function showScoresPage() {
   clearCardContent()
   var content = document.getElementById("content-card")
   var allScores = JSON.parse(localStorage.getItem("scoreCollection"))
-  var sorted = Object.entries(allScores).sort((a,b) => b[1]-a[1])
-
   var highScoresHeader = document.createElement('h3')
-  var scoreList = document.createElement('ol')
+  var buttonContainer = document.createElement('div')
   var restartButton = document.createElement('button')
-
-  var restartButtonAttributes = {
-    id: "restartButton"
-  }
-
-  setAttributes(restartButton, restartButtonAttributes)
-
-  highScoresHeader.textContent = "Highscores"
-  restartButton.textContent = "New Game?"
+  var goBackButton = document.createElement('button')
 
   content.appendChild(highScoresHeader)
-  content.appendChild(restartButton)
-  content.appendChild(scoreList)
+  content.appendChild(buttonContainer)
+  buttonContainer.appendChild(goBackButton)
 
-  Object.entries(sorted).forEach(individualScore => {
-    var scoreToAppend = document.createElement('li')
-    var individualInitials = individualScore[1][0], individualMatchedScore = individualScore[1][1]
-    scoreToAppend.textContent = `${individualInitials}: ${individualMatchedScore}`
-    scoreList.appendChild(scoreToAppend)
-  })
+  goBackButton.textContent = "Go back?"
+  goBackButton.addEventListener("click", firstLoad)
 
-  restartButton.addEventListener("click", startGame)
+  if (allScores !== null) {
+    var sorted = Object.entries(allScores).sort((a,b) => b[1]-a[1])
+  
+    var scoreList = document.createElement('ol')
+   
+    var clearScores = document.createElement('button')
+  
+    restartButton.setAttribute("style", "margin: 5px")
+  
+    highScoresHeader.textContent = "Highscores"
+    restartButton.textContent = "New Game?"
+    clearScores.textContent = "Clear Scores?"
+  
+    buttonContainer.appendChild(restartButton)
+    buttonContainer.appendChild(clearScores)
+    content.appendChild(scoreList)
+  
+    Object.entries(sorted).forEach(individualScore => {
+      var scoreToAppend = document.createElement('li')
+      var individualInitials = individualScore[1][0], individualMatchedScore = individualScore[1][1]
+      scoreToAppend.textContent = `${individualInitials}: ${individualMatchedScore}`
+      scoreList.appendChild(scoreToAppend)
+    })
+  
+    restartButton.addEventListener("click", startGame)
+    clearScores.addEventListener("click", () => {
+      localStorage.removeItem("scoreCollection")
+      scoreList.innerHTML = ""
+      buttonContainer.removeChild(buttonContainer.lastChild)
+      buttonContainer.removeChild(buttonContainer.lastChild)
+      highScoresHeader.textContent = "No scores available"
+    })
+  } else {
+    highScoresHeader.textContent = "No scores available"
+  }
+}
+
+function correctSelection(event) {
+  event.preventDefault();
+  clearCardContent()
+  score++;
+  currentScoreEl.textContent = `${score}`;
+  
+  if (askedQuestions.length > 0) {
+    createQuizCards(getRandomInt(askedQuestions.length))
+  } else {
+    endGame()
+  }
+}
+
+function incorrectSelection(event) {
+  event.preventDefault();
+  clearCardContent()
+  remainingTime -= 10;
+  score--;
+  currentScoreEl.textContent = `${score}`;
+  
+  if (askedQuestions.length > 0) {
+    createQuizCards(getRandomInt(askedQuestions.length))
+  } else {
+    endGame()
+  }
+}
+
+viewScores.addEventListener("click", showScoresPage)
+
+function setAttributes(element, attributes) {
+  Object.keys(attributes).forEach(attr => {
+    element.setAttribute(attr, attributes[attr]);
+  });
 }
