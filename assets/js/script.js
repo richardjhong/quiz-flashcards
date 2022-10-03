@@ -1,5 +1,5 @@
 var  timeEl = document.querySelector('.time');
-var currentScoreEl = document.querySelector('#currentScore')
+var currentScoreEl = document.querySelector('#currentActualScore')
 var startButton = document.querySelector('#start-game')
 var remainingTime = 10;
 var askedQuestions = [];
@@ -54,44 +54,43 @@ var questionSetCollective = {
 }
 
 function getRandomInt(max) {
-  let index = Math.floor(Math.random() * max);
-  if (askedQuestions.includes(index)) {
-    while (askedQuestions.includes(index)) {
-      index = Math.floor(Math.random() * max);
+  if (askedQuestions.length === 0) {
+    endGame()
+    return "ended";
+  } else {
+    let index = Math.floor(Math.random() * max);
+    switch (askedQuestions[index]) {
+      case 0: 
+        askedQuestions.splice( index, 1 )
+        return "first";
+        break;
+      case 1: 
+        askedQuestions.splice( index, 1 )
+        return "second";
+        break;
+      case 2:
+        askedQuestions.splice( index, 1 )
+        return "third";
+        break;
+      case 3:
+        askedQuestions.splice( index, 1 )
+        return "fourth"
+        break;
+      case 4:
+        askedQuestions.splice( index, 1 )
+        return "fifth"
+        break;
+      default:
+        return;
     }
-  }
-  switch (index) {
-    case 0: 
-      askedQuestions.push(index)
-      return "first";
-      break;
-    case 1: 
-      askedQuestions.push(index)
-      return "second";
-      break;
-    case 2:
-      askedQuestions.push(index)
-      return "third";
-      break;
-    case 3:
-      askedQuestions.push(index)
-      return "fourth"
-      break;
-    case 4:
-      askedQuestions.push(index)
-      return "fifth"
-      break;
-    default:
-      return;
   }
 }
 
 function startGame() {
   clearCardContent()
-  var questionSet = getRandomInt(Object.keys(questionSetCollective).length - 1)
-  console.log("test: ", questionSet)
-  createQuizCards(questionSet)
-  setTime()
+  askedQuestions = [0, 1, 2, 3, 4]
+  createQuizCards(getRandomInt(askedQuestions.length))
+  // setTime()
 }
 
 startButton.addEventListener("click", startGame)
@@ -103,10 +102,7 @@ function setTime () {
 
     if (remainingTime === 0) {
       clearInterval(timerInterval)
-      // clearCardContent()
-      // var questionSet = getRandomInt(Object.keys(questionSetCollective).length - 1)
-      // console.log("test: ", questionSet)
-      // createQuizCards(questionSet)
+      endGame()
       console.log("Time out")
     }
   }, 1000)
@@ -122,13 +118,9 @@ function clearCardContent () {
 
 function createQuizCards (questionSet) {
   var content = document.getElementById("content-card")
-  var installments = ['Installment 1', 'Installment 2', 'Installment 3', 'Installment 4', 'Installment 5'];
-
   var currentQuestionSet = questionSetCollective[questionSet]
-  // console.log("number of objects: ", Object.keys(questionSetCollective))
-
+  console.log("here is what createQuizCards is receiving: ", questionSet)
   console.log("currentQuestionSet data: ", currentQuestionSet)
-  // console.log("askedQuestions: ", askedQuestions)
 
 
   var questionHeader = document.createElement('h3')
@@ -139,7 +131,6 @@ function createQuizCards (questionSet) {
   currentQuestionSet.questions.forEach(question => {
     var questionToAppend = document.createElement('li')
     questionToAppend.textContent = question[1]
-   
 
     if (question[0] === "correct") {
       questionToAppend.addEventListener("click", correctSelection)
@@ -155,21 +146,46 @@ function createQuizCards (questionSet) {
 
 function correctSelection(event) {
   event.preventDefault();
+  clearCardContent()
   event.currentTarget.setAttribute(
     "style",
     "border: 1px solid black"
   )
   score++;
-  currentScoreEl.textContent = `Current score: ${score}`;
+  currentScoreEl.textContent = `${score}`;
+
+  console.log("askedQuestions.length: ", askedQuestions.length)
+  
+  createQuizCards(getRandomInt(askedQuestions.length))
+
 }
 
 function incorrectSelection(event) {
   event.preventDefault();
+  clearCardContent()
   event.currentTarget.setAttribute(
     "style",
     "border: 1px dotted red"
   )
   score--;
-  currentScoreEl.textContent = `Current score: ${score}`;
+  currentScoreEl.textContent = `${score}`;
+  
+  createQuizCards(getRandomInt(askedQuestions.length))
+  
+}
+
+function endGame() {
+  clearCardContent();
+  var content = document.getElementById("content-card")
+
+  var endScreenHeader = document.createElement("h3")
+  var endScoreText = document.createElement("p")
+
+  endScreenHeader.textContent = "All done!"
+  endScoreText.textContent = `Your final score is ${score}.`
+
+  content.appendChild(endScreenHeader)
+  content.appendChild(endScoreText)
+
 }
 
