@@ -3,6 +3,7 @@ var currentScoreEl = document.querySelector('#currentActualScore')
 var currentHighScore = document.querySelector('#currentHighScore')
 var viewScores = document.querySelector('#highscorelink')
 var startButton = document.querySelector('#start-game')
+var content = document.getElementById("content-card")
 var remainingTime;
 var askedQuestions;
 var score;
@@ -59,7 +60,6 @@ firstLoad()
 
 function firstLoad() {
   clearCardContent()
-  var content = document.getElementById("content-card")
   var firstLoadHeader = document.createElement("h3")
   var paragraphContainer = document.createElement("div")
   var buttonContainer = document.createElement("div")
@@ -70,7 +70,6 @@ function firstLoad() {
   paragraph.textContent = "Try to answer the following code-related questions within the time limit (60s). Keep in mind that each incorrect answer will penalize your score and reduce remaining time by ten seconds!"
   startButton.textContent = "Start Quiz"
 
-
   content.appendChild(firstLoadHeader)
   content.appendChild(paragraphContainer)
   paragraphContainer.appendChild(paragraph)
@@ -78,6 +77,12 @@ function firstLoad() {
   buttonContainer.appendChild(startButton)
 
   startButton.addEventListener("click", startGame)
+}
+
+function clearCardContent () {
+  while (content.firstChild) {  
+    content.removeChild(content.firstChild)
+  }
 }
 
 function startGame() {
@@ -111,32 +116,20 @@ function getRandomInt(max) {
     case 0: 
       askedQuestions.splice( index, 1 )
       return "first";
-      break;
     case 1: 
       askedQuestions.splice( index, 1 )
       return "second";
-      break;
     case 2:
       askedQuestions.splice( index, 1 )
       return "third";
-      break;
     case 3:
       askedQuestions.splice( index, 1 )
       return "fourth"
-      break;
     case 4:
       askedQuestions.splice( index, 1 )
       return "fifth"
-      break;
     default:
       return;
-  }
-}
-
-function clearCardContent () {
-  var content = document.getElementById("content-card")
-  while (content.firstChild) {  
-    content.removeChild(content.firstChild)
   }
 }
 
@@ -167,8 +160,6 @@ function createQuizCards (questionSet) {
 
 function endGame() {
   clearCardContent();
-  var content = document.getElementById("content-card")
-
   var endScreenHeader = document.createElement("h3")
   var endScoreText = document.createElement("p")
   var inputContainer = document.createElement("div")
@@ -188,7 +179,6 @@ function endGame() {
   endScoreText.textContent = `Your final score is ${score}.`
   submitButton.textContent = 'Submit'
   
-
   content.appendChild(endScreenHeader)
   content.appendChild(endScoreText)
   content.appendChild(inputContainer)
@@ -209,7 +199,6 @@ function submitInitials() {
 
 function showScoresPage() {
   clearCardContent()
-  var content = document.getElementById("content-card")
   var allScores = JSON.parse(localStorage.getItem("scoreCollection"))
   var highScoresHeader = document.createElement('h3')
   var buttonContainer = document.createElement('div')
@@ -225,9 +214,7 @@ function showScoresPage() {
 
   if (allScores !== null) {
     var sorted = Object.entries(allScores).sort((a,b) => b[1]-a[1])
-  
     var scoreList = document.createElement('ol')
-   
     var clearScores = document.createElement('button')
   
     restartButton.setAttribute("style", "margin: 5px")
