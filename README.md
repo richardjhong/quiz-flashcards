@@ -57,10 +57,10 @@ There are a multitude of helper functions that pass information between each oth
   This function takes input as the return value of getRandomInt. This function creates a question header where the question itself goes and a questionList ordered list. Both of these are extracted from the variable currentQuestionSet which takes the key from return of getRandomInt and uses the values. Next these answers are randomized and then each answer takes an id according to whether it is a correct ansewr or an incorrect answer. Finally the function adds each answer to the questionList.
 
   ### correctSelection
-  This function adds 1 to the score and updates the score displayed at the top left of the page. It then checks if there are any remaining questions in which case it uses the same chained functions as in startGame 3 above; if not then the game ends via calling endQuiz.
+  This function checks the current remaining time and uses that as the current score. It then checks if there are any remaining questions in which case it uses the same chained functions as in startGame 3 above; if not then the game ends via calling endQuiz.
 
   ### incorrectSelection
-  This function removes 10 seconds from the remaining time and takes 1 from the score. It updates the score displayed on the top left of the page. This also uses the same check in correctSelection.
+  This function removes 10 seconds from the remaining time and gives current score of the remaining time afterwards. It updates the score displayed on the top left of the page. This also uses the same check in correctSelection.
 
   ### endQuiz
   This function calls the clearCardContent function and then displays the current score, an input for the player to type his/her initials, and a submit button. Clicking the submit button invokes the submitInitials function.

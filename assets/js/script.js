@@ -83,11 +83,13 @@ function clearCardContent () {
   }
 }
 
+
+// reset variables to starting condition within startGame
 function startGame() {
   clearCardContent()
   askedQuestions = [0, 1, 2, 3, 4]
   remainingTime = 60
-  score = 0
+  score = 60
   currentScoreEl.textContent = `${score}`
   createQuizCards(getRandomInt(askedQuestions.length))
   setTime()
@@ -107,6 +109,7 @@ function setTime () {
   }, 1000)
 }
 
+// tied to questionSetCollective object, editing this requires edting the switch statement below as well
 function getRandomInt(max) {
   let index = Math.floor(Math.random() * max);
   switch (askedQuestions[index]) {
@@ -142,6 +145,8 @@ function randomizeAnswerOrder(answers) {
   return randomizedAnswers;
 }
 
+
+// randomizedAnswers uses spread operator to copy the array as there is splicing within the randomizeAnswerOrder function
 function createQuizCards (questionSet) {
   var content = document.getElementById("content-card")
   var currentQuestionSet = questionSetCollective[questionSet]
@@ -256,7 +261,7 @@ function showScoresPage() {
 
 function correctSelection() {
   clearCardContent()
-  score++;
+  score = remainingTime
   currentScoreEl.textContent = `${score}`;
   
   if (askedQuestions.length > 0) {
@@ -269,7 +274,7 @@ function correctSelection() {
 function incorrectSelection() {
   clearCardContent()
   remainingTime -= 10;
-  score--;
+  score = remainingTime
   currentScoreEl.textContent = `${score}`;
   
   if (askedQuestions.length > 0) {
