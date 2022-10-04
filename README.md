@@ -67,8 +67,8 @@ This function calls the clearCardContent function and then displays the current 
 
 ### submitInitials
 This function takes the text input from endQuiz input. It will then do one of two things:
-- If the scoreCollection object already exists within localStorage (after being extracted from JSON.parse), the new initials and score are appended within an array to the scoreCollection object. This is then set to localStorage to keep track of existing scores as well as the newest entry.
-- If the scoreCollection object doesn't exist, then it is initialized as an empty object. The new initials and score are appended within an array to the newly created scoreCollection and set to localStorage.
+  - If the scoreCollection object already exists within localStorage (after being extracted from JSON.parse), the new initials and score are appended within an array to the scoreCollection object. This is then set to localStorage to keep track of existing scores as well as the newest entry.
+  - If the scoreCollection object doesn't exist, then it is initialized as an empty object. The new initials and score are appended within an array to the newly created scoreCollection and set to localStorage.
 
 ### showScoresPage
 This function begins with checking if there is an existing scoreCollection within localStorage. A button container with a "go back" button is displayed. Depending on if there are existing scores then two interactions can happen:
