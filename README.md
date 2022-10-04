@@ -3,15 +3,15 @@
 ![quiz.gif](./assets/images/quiz.gif)
 
 ## Description
-The app asks a series of 5 question related to JavaScript language knowledge with mulitple choice answers. The player gets a score based on how well he/she does and finally can enter name initials to add to a scoreboard. The game ends when the timer (60 seconds) expires or the player has finished answering all questions. The question order is randomized as are the multiple choice answers to decentivize memorizing of answers.
+The app asks a series of 5 question related to JavaScript language knowledge with multiple choice answers. The player gets a score based on how well he/she does and finally can enter name initials to add to a scoreboard. The game ends when the timer (60 seconds) expires or the player has finished answering all questions. The question order is randomized as are the multiple choice answers to discourage player from getting all answers correct via rote memorization.
 
 ## Architecture
 ![screenshot](./assets/images/drawing_flow.jpg)
 
-The picture shows the flow of the game assuming a player starts the game, goes through each quesiton, and reaches the end of the game without any wayward behavior along the way.
+The picture shows the flow of the game assuming a player starts the game, goes through each question, and reaches the end of the game without any wayward behavior along the way.
 
 There are a multitude of helper functions that pass information between each other as well. The high level of the data flow is the following:
-  - Player starts the game after loading the first screen
+  - Player starts the game after loading the first screen.
   - Player then is presented with a new set of information on the screen: a question with 4 multiple choice answers. Player then chooses an answer.
   - Player then continues through each randomized question until he/she has answered all questions. At this point, the game ends.
   - Player is presented with his/her score and input to store his/her name initials on the scoreboard.
@@ -33,7 +33,7 @@ There are a multitude of helper functions that pass information between each oth
   - showScoresPage
 
   ### startLoad
-  This function effectively clears the content-card of any children and presents the elements for when the player first loads the page. This function is also called if the player clicks "Go back?" once on the score page. Notice that this function is also invoked on line 58 of the script.js to allow for the game start button to appear and start the sequence of events.
+  This function effectively clears the content-card of any children and presents the elements for when the player first loads the page. This function is also called if the player clicks "Go back?" when on the score page. Notice that this function is also invoked on line 58 of the script.js to allow for the game start button to appear and start the sequence of events.
 
   ### clearCardContent
   This function clears the children of content-card div.
