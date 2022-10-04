@@ -1,5 +1,7 @@
 # Quiz Flashcards
 
+![quiz.gif](./assets/images/quiz.gif)
+
 ## Description
 The app asks a series of 5 question related to JavaScript language knowledge with mulitple choice answers. The player gets a score based on how well he/she does and finally can enter name initials to add to a scoreboard. The game ends when the timer (60 seconds) expires or the player has finished answering all questions. The question order is randomized as are the multiple choice answers to decentivize memorizing of answers.
 

@@ -145,7 +145,7 @@ function randomizeAnswerOrder(answers) {
 function createQuizCards (questionSet) {
   var content = document.getElementById("content-card")
   var currentQuestionSet = questionSetCollective[questionSet]
-  var randomizedAnswers = randomizeAnswerOrder(currentQuestionSet.questions)
+  var randomizedAnswers = randomizeAnswerOrder([...currentQuestionSet.questions])
   var questionHeader = document.createElement('h3')
   var questionList = document.createElement('ol')
   content.appendChild(questionHeader)
