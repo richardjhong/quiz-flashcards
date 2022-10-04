@@ -78,6 +78,5 @@ There are a multitude of helper functions that pass information between each oth
   ## Livesite
   [Deployed on Github page](https://richardjhong.github.io/quiz-flashcards/)
   
-
   ## Additional Notes/Thoughts on improvement
   The code is built with hardcoded set of questions and answers (variable questionSetCollective within script.js). This also has hard-coded data that are tied including the cases within the switch statement of getRandomInt and askedQuestions array within startGame. Editing the questionSetCollective or adding new sets needs to update the two hard-coded data as well. Lastly submitting initials that already exist within the localStorage scoreCollection object will result in replacing the existing initials: score instead of adding a new entry. 
