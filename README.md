@@ -75,5 +75,9 @@ There are a multitude of helper functions that pass information between each oth
     - If there are no exisiting scores, then there are no more buttons to display and the current header will show as "No scores available".
     - If there are existing scores, then the scoreCollection is sorted and stored in a new variable named sorted. A header with text content added to the page. Two more buttons are added as well: restart and clear scores. Finally a list is added with each entry within sorted array that displays the initials and score. Lastly clearScores button has the eventListener added within showScoresPage to remove the scoreCollection from localStorage, empty the scoreList, remove the resetButton and clearScores button, and changes the header to "No Scores available". Ideally this eventListener would be added along with the eventListeners at the end of the script.js file but as there are moving parts involved with the showScoresPage, I left it here for now.
 
+  ## Livesite
+  [Deployed on Github page](https://richardjhong.github.io/quiz-flashcards/)
+  
+
   ## Additional Notes/Thoughts on improvement
   The code is built with hardcoded set of questions and answers (variable questionSetCollective within script.js). This also has hard-coded data that are tied including the cases within the switch statement of getRandomInt and askedQuestions array within startGame. Editing the questionSetCollective or adding new sets needs to update the two hard-coded data as well. Lastly submitting initials that already exist within the localStorage scoreCollection object will result in replacing the existing initials: score instead of adding a new entry. 
