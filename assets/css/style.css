@@ -23,3 +23,15 @@
 #highscorelink:hover {
   cursor: pointer;
 }
+
+li {
+  background-color: purple; 
+  color: white;
+  border: 1px solid black; 
+  margin: 5px; 
+  font-size: 20px;
+}
+
+#restart-button {
+  margin: 5px;
+}

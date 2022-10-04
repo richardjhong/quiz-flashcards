@@ -2,7 +2,6 @@ var timeEl = document.querySelector('.time');
 var currentScoreEl = document.querySelector('#currentActualScore')
 var currentHighScore = document.querySelector('#currentHighScore')
 var viewScores = document.querySelector('#highscorelink')
-var startButton = document.querySelector('#start-game')
 var content = document.getElementById("content-card")
 var remainingTime;
 var askedQuestions;
@@ -28,12 +27,12 @@ var questionSetCollective = {
     ]
   },
   "third": {
-    header: "Which of the following methods can be used to display data in some form using Javascript?",
+    header: "What keyword is used to check whether a given property is valid or not?",
     questions: [
-      ["incorrect", "console.log()"],
-      ["incorrect", "window.print()"],
-      ["incorrect", "window.alert()"],
-      ["correct", "All of the above"],
+      ["incorrect", "is in"],
+      ["incorrect", "exists"],
+      ["incorrect", "lies"],
+      ["correct", "in"],
     ]
   },
   "fourth": {
@@ -41,8 +40,8 @@ var questionSetCollective = {
     questions: [
       ["incorrect", "string"],
       ["incorrect", "boolean"],
-      ["incorrect", "Neither A or B"],
-      ["correct", "Both A and B"],
+      ["incorrect", "Neither string nor boolean"],
+      ["correct", "Both string and boolean"],
     ]
   },
   "fifth": {
@@ -56,27 +55,26 @@ var questionSetCollective = {
   },
 }
 
-firstLoad()
+startLoad()
 
-function firstLoad() {
+function startLoad() {
   clearCardContent()
-  var firstLoadHeader = document.createElement("h3")
+  var startLoadHeader = document.createElement("h3")
   var paragraphContainer = document.createElement("div")
   var buttonContainer = document.createElement("div")
   var paragraph = document.createElement("p")
   var startButton = document.createElement("button")
 
-  firstLoadHeader.textContent = "Coding Quiz Challenge"
+  startLoadHeader.textContent = "Coding Quiz Challenge"
   paragraph.textContent = "Try to answer the following code-related questions within the time limit (60s). Keep in mind that each incorrect answer will penalize your score and reduce remaining time by ten seconds!"
   startButton.textContent = "Start Quiz"
+  startButton.setAttribute("id", "start-game")
 
-  content.appendChild(firstLoadHeader)
+  content.appendChild(startLoadHeader)
   content.appendChild(paragraphContainer)
   paragraphContainer.appendChild(paragraph)
   content.appendChild(buttonContainer)
   buttonContainer.appendChild(startButton)
-
-  startButton.addEventListener("click", startGame)
 }
 
 function clearCardContent () {
@@ -102,8 +100,7 @@ function setTime () {
 
     if (remainingTime <= 0 && askedQuestions.length !== 0) {
       clearInterval(timerInterval)
-      endGame()
-      console.log("Time out")
+      endQuiz()
     } else if (askedQuestions.length === 0) {
       clearInterval(timerInterval)
     }
@@ -133,32 +130,44 @@ function getRandomInt(max) {
   }
 }
 
+function randomizeAnswerOrder(answers) {
+  var randomizedAnswers = []
+
+  while (answers.length > 0) {
+    let index = Math.floor(Math.random() * answers.length);
+    randomizedAnswers.push(answers[index])
+    answers.splice(index, 1)
+  }
+
+  return randomizedAnswers;
+}
+
 function createQuizCards (questionSet) {
   var content = document.getElementById("content-card")
   var currentQuestionSet = questionSetCollective[questionSet]
+  var randomizedAnswers = randomizeAnswerOrder(currentQuestionSet.questions)
   var questionHeader = document.createElement('h3')
   var questionList = document.createElement('ol')
   content.appendChild(questionHeader)
   content.appendChild(questionList)
 
-  currentQuestionSet.questions.forEach(question => {
-    var questionToAppend = document.createElement('li')
-    questionToAppend.textContent = question[1]
-    questionToAppend.setAttribute("style", "background-color: purple; color: white; border: 1px solid black; margin: 5px; font-size: 20px;")
+  randomizedAnswers.forEach(answer => {
+    var answerToAppend = document.createElement('li')
+    answerToAppend.textContent = answer[1]
 
-    if (question[0] === "correct") {
-      questionToAppend.addEventListener("click", correctSelection)
+    if (answer[0] === "correct") {
+      answerToAppend.setAttribute("id", "correct-answer")
     } else {
-      questionToAppend.addEventListener("click", incorrectSelection)
+      answerToAppend.setAttribute("id", "incorrect-answer")
     }
 
-    questionList.appendChild(questionToAppend)
+    questionList.appendChild(answerToAppend)
   })
   
   questionHeader.textContent = currentQuestionSet.header
 }
 
-function endGame() {
+function endQuiz() {
   clearCardContent();
   var endScreenHeader = document.createElement("h3")
   var endScoreText = document.createElement("p")
@@ -173,8 +182,7 @@ function endGame() {
   }
 
   setAttributes(nameInitialsInput, nameInputAttributes)
-  inputContainer.setAttribute("style", "margin: 5px")
-  submitButton.setAttribute("style", "margin: 5px")
+  submitButton.setAttribute("id", "submit-button")
   endScreenHeader.textContent = "All done!"
   endScoreText.textContent = `Your final score is ${score}.`
   submitButton.textContent = 'Submit'
@@ -185,8 +193,6 @@ function endGame() {
 
   inputContainer.appendChild(nameInitialsInput)
   inputContainer.appendChild(submitButton)
-
-  submitButton.addEventListener("click", submitInitials)
 }
 
 function submitInitials() {
@@ -202,22 +208,21 @@ function showScoresPage() {
   var allScores = JSON.parse(localStorage.getItem("scoreCollection"))
   var highScoresHeader = document.createElement('h3')
   var buttonContainer = document.createElement('div')
-  var restartButton = document.createElement('button')
   var goBackButton = document.createElement('button')
 
+  
   content.appendChild(highScoresHeader)
   content.appendChild(buttonContainer)
   buttonContainer.appendChild(goBackButton)
-
+  
+  goBackButton.setAttribute("id", "go-back-button")
   goBackButton.textContent = "Go back?"
-  goBackButton.addEventListener("click", firstLoad)
 
   if (allScores !== null) {
     var sorted = Object.entries(allScores).sort((a,b) => b[1]-a[1])
     var scoreList = document.createElement('ol')
     var clearScores = document.createElement('button')
-  
-    restartButton.setAttribute("style", "margin: 5px")
+    var restartButton = document.createElement('button')
   
     highScoresHeader.textContent = "Highscores"
     restartButton.textContent = "New Game?"
@@ -226,6 +231,9 @@ function showScoresPage() {
     buttonContainer.appendChild(restartButton)
     buttonContainer.appendChild(clearScores)
     content.appendChild(scoreList)
+
+    restartButton.setAttribute("id", "restart-button")
+    clearScores.setAttribute("id", "clear-scores-button")
   
     Object.entries(sorted).forEach(individualScore => {
       var scoreToAppend = document.createElement('li')
@@ -234,7 +242,6 @@ function showScoresPage() {
       scoreList.appendChild(scoreToAppend)
     })
   
-    restartButton.addEventListener("click", startGame)
     clearScores.addEventListener("click", () => {
       localStorage.removeItem("scoreCollection")
       scoreList.innerHTML = ""
@@ -247,8 +254,7 @@ function showScoresPage() {
   }
 }
 
-function correctSelection(event) {
-  event.preventDefault();
+function correctSelection() {
   clearCardContent()
   score++;
   currentScoreEl.textContent = `${score}`;
@@ -256,12 +262,11 @@ function correctSelection(event) {
   if (askedQuestions.length > 0) {
     createQuizCards(getRandomInt(askedQuestions.length))
   } else {
-    endGame()
+    endQuiz()
   }
 }
 
-function incorrectSelection(event) {
-  event.preventDefault();
+function incorrectSelection() {
   clearCardContent()
   remainingTime -= 10;
   score--;
@@ -270,14 +275,34 @@ function incorrectSelection(event) {
   if (askedQuestions.length > 0) {
     createQuizCards(getRandomInt(askedQuestions.length))
   } else {
-    endGame()
+    endQuiz()
   }
 }
-
-viewScores.addEventListener("click", showScoresPage)
 
 function setAttributes(element, attributes) {
   Object.keys(attributes).forEach(attr => {
     element.setAttribute(attr, attributes[attr]);
   });
 }
+
+content.addEventListener('click', function(e) {
+  if (e.target.id === 'start-game' || e.target.id === "restart-button") {
+    startGame()
+  }
+  
+  if (e.target.id === 'correct-answer') {
+    correctSelection()
+  } else if (e.target.id === "incorrect-answer") {
+    incorrectSelection()
+  }
+  
+  if (e.target.id === "submit-button") {
+    submitInitials()
+  }
+  
+  if (e.target.id === "go-back-button") {
+    startLoad()
+  }
+})
+
+viewScores.addEventListener("click", showScoresPage)
