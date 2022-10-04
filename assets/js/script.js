@@ -4,7 +4,7 @@ var currentHighScore = document.querySelector('#currentHighScore')
 var viewScores = document.querySelector('#highscorelink')
 var content = document.getElementById("content-card")
 var remainingTime;
-var askedQuestions;
+var remainingQuestions;
 var score;
 
 var questionSetCollective = {
@@ -87,11 +87,11 @@ function clearCardContent () {
 // reset variables to starting condition within startGame
 function startGame() {
   clearCardContent()
-  askedQuestions = [0, 1, 2, 3, 4]
+  remainingQuestions = [0, 1, 2, 3, 4]
   remainingTime = 60
   score = 60
   currentScoreEl.textContent = `${score}`
-  createQuizCards(getRandomInt(askedQuestions.length))
+  createQuizCards(getRandomInt(remainingQuestions.length))
   setTime()
 }
 
@@ -100,10 +100,10 @@ function setTime () {
     remainingTime--;
     timeEl.textContent = remainingTime + " seconds remaining"
 
-    if (remainingTime <= 0 && askedQuestions.length !== 0) {
+    if (remainingTime <= 0 && remainingQuestions.length !== 0) {
       clearInterval(timerInterval)
       endQuiz()
-    } else if (askedQuestions.length === 0) {
+    } else if (remainingQuestions.length === 0) {
       clearInterval(timerInterval)
     }
   }, 1000)
@@ -112,21 +112,21 @@ function setTime () {
 // tied to questionSetCollective object, editing this requires edting the switch statement below as well
 function getRandomInt(max) {
   let index = Math.floor(Math.random() * max);
-  switch (askedQuestions[index]) {
+  switch (remainingQuestions[index]) {
     case 0: 
-      askedQuestions.splice( index, 1 )
+      remainingQuestions.splice( index, 1 )
       return "first";
     case 1: 
-      askedQuestions.splice( index, 1 )
+      remainingQuestions.splice( index, 1 )
       return "second";
     case 2:
-      askedQuestions.splice( index, 1 )
+      remainingQuestions.splice( index, 1 )
       return "third";
     case 3:
-      askedQuestions.splice( index, 1 )
+      remainingQuestions.splice( index, 1 )
       return "fourth"
     case 4:
-      askedQuestions.splice( index, 1 )
+      remainingQuestions.splice( index, 1 )
       return "fifth"
     default:
       return;
@@ -264,8 +264,8 @@ function correctSelection() {
   score = remainingTime
   currentScoreEl.textContent = `${score}`;
   
-  if (askedQuestions.length > 0) {
-    createQuizCards(getRandomInt(askedQuestions.length))
+  if (remainingQuestions.length > 0) {
+    createQuizCards(getRandomInt(remainingQuestions.length))
   } else {
     endQuiz()
   }
@@ -277,8 +277,8 @@ function incorrectSelection() {
   score = remainingTime
   currentScoreEl.textContent = `${score}`;
   
-  if (askedQuestions.length > 0) {
-    createQuizCards(getRandomInt(askedQuestions.length))
+  if (remainingQuestions.length > 0) {
+    createQuizCards(getRandomInt(remainingQuestions.length))
   } else {
     endQuiz()
   }
