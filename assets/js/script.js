@@ -5,6 +5,7 @@ var viewScores = document.querySelector('#highscorelink')
 var content = document.getElementById("content-card")
 var remainingTime;
 var remainingQuestions;
+var endOfTurns;
 var score;
 
 var questionSetCollective = {
@@ -90,6 +91,7 @@ function startGame() {
   remainingQuestions = [0, 1, 2, 3, 4]
   remainingTime = 60
   score = 60
+  endOfTurns = false
   currentScoreEl.textContent = `${score}`
   createQuizCards(getRandomInt(remainingQuestions.length))
   setTime()
@@ -103,7 +105,7 @@ function setTime () {
     if (remainingTime <= 0 && remainingQuestions.length !== 0) {
       clearInterval(timerInterval)
       endQuiz()
-    } else if (remainingQuestions.length === 0) {
+    } else if (endOfTurns) {
       clearInterval(timerInterval)
     }
   }, 1000)
@@ -263,10 +265,11 @@ function correctSelection() {
   clearCardContent()
   score = remainingTime
   currentScoreEl.textContent = `${score}`;
-  
+
   if (remainingQuestions.length > 0) {
     createQuizCards(getRandomInt(remainingQuestions.length))
   } else {
+    endOfTurns = true
     endQuiz()
   }
 }
@@ -275,11 +278,13 @@ function incorrectSelection() {
   clearCardContent()
   remainingTime -= 10;
   score = remainingTime
+
   currentScoreEl.textContent = `${score}`;
   
   if (remainingQuestions.length > 0) {
     createQuizCards(getRandomInt(remainingQuestions.length))
   } else {
+    endOfTurns = true
     endQuiz()
   }
 }

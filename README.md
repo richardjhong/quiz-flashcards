@@ -48,7 +48,7 @@ This function performs four tasks:
 ### setTime
 This function sets at 60 second time interval where every second will update the timer on the top right of the page to how many seconds are left. There are also two conditions within this function:
   1. If the time is up and there are still questions left unanswered, the time interval is cleared and the game ends.
-  2. If there are no questions left unanswered, then the game ends regardless of how much time is left. The time interval is cleared and the logic for ending the game is taken into account elsewhere (correctSelection & incorrectSelection functions).
+  2. If there are no questions left in the pool selection, there is still a scenario in which the user is answering the last question. As such, after the user has made answered the last question, this then turns the endOfTurns boolean true. The time interval is cleared and the logic for ending the game is taken into account elsewhere (correctSelection & incorrectSelection functions).
 
 ### getRandomInt
 This function grabs a random number between 0 through 4 (4 being 1 less than the length of the number of quetsions to be asked as this takes 0-indexing of arrays into account.) Then a switch statement removes the number index of question from askedQuestions and evaluates which corresponding object key to return from questionSetCollective variable. By removing the number from askedQuestions, there are no repeat questions and the app can track if all questions have been asked.
